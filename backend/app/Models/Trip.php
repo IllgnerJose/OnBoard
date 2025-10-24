@@ -10,4 +10,5 @@ class Trip extends Model
         'departure_date',
         'return_date'
     ];
+
 }
