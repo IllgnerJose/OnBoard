@@ -16,11 +16,11 @@ return new class extends Migration
             $table->date('departure_date');
             $table->date('return_date');
 
-            $table->unsignedBigInteger('destionation_id');
+            $table->unsignedBigInteger('destination_id');
             $table->unsignedBigInteger('status_id');
             $table->unsignedBigInteger('user_id');
             
-            $table->foreign('destionation_id')->references('id')->on('destinations');
+            $table->foreign('destination_id')->references('id')->on('destinations');
             $table->foreign('status_id')->references('id')->on('statuses');
             $table->foreign('user_id')->references('id')->on('users');
 
