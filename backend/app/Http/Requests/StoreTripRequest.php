@@ -25,7 +25,6 @@ class StoreTripRequest extends BaseRequest
             "departure_date" => "required|date",
             "return_date" => "required|date",
             "destination_id" => "required|integer|exists:App\Models\Destination,id",
-            "status_id" => "required|integer|exists:App\Models\Status,id",
             "user_id" => "required|integer|exists:App\Models\User,id",
         ];
     }
