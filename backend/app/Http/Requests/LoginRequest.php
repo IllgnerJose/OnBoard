@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\BaseRequest;
+use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTripRequest extends BaseRequest
+class LoginRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +22,8 @@ class StoreTripRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            "departure_date" => "required|date",
-            "return_date" => "required|date",
-            "destination_id" => "required|integer|exists:App\Models\Destination,id",
-            "status_id" => "required|integer|exists:App\Models\Status,id",
-            "user_id" => "required|integer|exists:App\Models\User,id",
+            'email' => 'required|email',
+            'password' => 'required',
         ];
     }
 }

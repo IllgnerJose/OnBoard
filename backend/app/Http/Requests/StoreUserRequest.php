@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\BaseRequest;
 
-class StoreTripRequest extends BaseRequest
+class StoreUserRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +22,11 @@ class StoreTripRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            "departure_date" => "required|date",
-            "return_date" => "required|date",
-            "destination_id" => "required|integer|exists:App\Models\Destination,id",
-            "status_id" => "required|integer|exists:App\Models\Status,id",
-            "user_id" => "required|integer|exists:App\Models\User,id",
+            'name' => 'required',
+            'email' => 'required|email',
+            'password' => 'required',
+            'c_password' => 'required|same:password',
+            'role_id' => "required|integer|exists:App\Models\Role,id",
         ];
     }
 }
