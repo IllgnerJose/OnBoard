@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
-use App\Models\Destionation;
+use App\Models\Destination;
 use App\Models\Status;
 
 /**
@@ -20,14 +20,28 @@ class TripFactory extends Factory
     public function definition(): array
     {
         $user = User::factory()->create();
-        $destination = Destination::latest()->frist();
+        $destination = Destination::factory()->create();
 
         return [
             "departure_date" => now(),
             "return_date" => now(),
-            "destionation_id" => $destination->id;
-            "status_id" => Status::where('name', TripStatus::REQUESTED)->first()->id,
+            "destination_id" => $destination->id,
+            "status_id" => Status::factory()->create()->id,
             "user_id" => $user->id,
         ];
+    }
+
+    public function canceled()
+    {
+        return $this->state(fn (array $attributes) => [
+            "status_id" => Status::factory()->canceled()->create()->id,
+        ]);
+    }
+
+    public function approved()
+    {
+        return $this->state(fn (array $attributes) => [
+            "status_id" => Status::factory()->approved()->create()->id,
+        ]);
     }
 }
