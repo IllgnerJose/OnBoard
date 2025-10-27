@@ -27,7 +27,7 @@ class TripRepository {
         return $this->tripModel->create($validatedData);
     }
 
-    public function find(int $id): Trip 
+    public function find(int $id): ?Trip  
     {
         return $this->tripModel->find($id);
     }

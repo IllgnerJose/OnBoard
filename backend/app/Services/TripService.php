@@ -30,7 +30,7 @@ class TripService {
         return $trip;
     }
 
-    public function show(int $id): Trip 
+    public function show(int $id): ?Trip 
     {
         $trip = $this->tripRepository->find($id);
         return $trip;
