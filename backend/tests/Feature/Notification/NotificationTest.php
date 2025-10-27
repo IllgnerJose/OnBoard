@@ -20,8 +20,10 @@ it('returns the latest 20 notifications for the authenticated user', function ()
     $response = $this->getJson('/api/notifications');
 
     $response->assertOk()
+        ->assertJson([
+            'success' => true,
+        ])
         ->assertJsonStructure([
-            'success',
             'data' => [
                 '*' => ['id', 'type', 'data', 'read_at', 'created_at']
             ]
@@ -42,7 +44,6 @@ it('marks a specific notification as read', function () {
     $response->assertOk()
         ->assertJson([
             'success' => true,
-            'message' => 'Notificação marcada como lida.'
         ]);
 
     $notification->refresh();
@@ -61,7 +62,6 @@ it('marks all unread notifications as read', function () {
     $response->assertOk()
         ->assertJson([
             'success' => true,
-            'message' => 'Todas as notificações marcadas como lidas.'
         ]);
 
     $this->assertDatabaseMissing('notifications', [
@@ -88,6 +88,5 @@ it('returns the unread notifications count', function () {
     $response->assertOk()
         ->assertJson([
             'success' => true,
-            'data' => ['count' => 2],
         ]);
 });

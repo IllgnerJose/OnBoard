@@ -42,5 +42,8 @@ it('fails login with wrong password', function () {
         'password' => 'wrongpassword',
     ]);
 
-    $response->assertUnauthorized(); 
+    $response->assertUnauthorized()
+        ->assertJson([
+            'success' => false,
+        ]); 
 });
