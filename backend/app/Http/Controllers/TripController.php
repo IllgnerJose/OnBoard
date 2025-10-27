@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\TripService;
+use App\Services\StatusService;
 use App\Http\Requests\StoreTripRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
@@ -15,6 +16,7 @@ class TripController extends Controller
 {
     public function __construct(
         protected TripService $tripService,
+        protected StatusService $statusService,
     ){}
 
     public function index(): JsonResponse
@@ -26,7 +28,12 @@ class TripController extends Controller
     public function store(StoreTripRequest $request): JsonResponse
     {
         $validatedData = $request->validated();
-        $status = Status::where('name', TripStatus::REQUESTED->name)->first();
+        $status = $this->statusService->getByName(TripStatus::REQUESTED->name);
+
+        if (is_null($status)) {
+            return $this->sendError("Status " . TripStatus::REQUESTED->name . " não encontrado.");
+        }
+
         $validatedData["status_id"] = $status->id;
 
         $trip = $this->tripService->store($validatedData);
@@ -38,41 +45,46 @@ class TripController extends Controller
         $trip = $this->tripService->show($id);
 
         if (is_null($trip)) {
-            $this->sendError('Produto não encontrado.');
+            $this->sendError('Pedido de viagem não encontrado.');
         }
 
         return $this->sendResponse(new TripResource($trip), 'Pedido de viagem retornado com sucesso.');
     }
 
-    private function updateTripStatus(int $id, string $statusName, string $successMessage): JsonResponse
+    private function updateTripStatus(int $id, TripStatus $status, string $successMessage): JsonResponse
     {
         $trip = $this->tripService->show($id);
 
         if (is_null($trip)) {
-            return $this->sendError('Produto não encontrado.');
+            return $this->sendError('Pedido de viagem não encontrado.');
         }
 
         if (Auth::user()->cannot('updateStatus', $trip)) {
             return $this->sendError('O usuário não tem permissão para atualizar o status do pedido.', [], 403);
         }
 
-        $status = Status::where('name', $statusName)->first();
-        $validatedData = ['status_id' => $status->id];
+        $statusModel = $this->statusService->getByName($status->name);
+
+        if (is_null($statusModel)) {
+            return $this->sendError("Status '{$status->name}' não encontrado.");
+        }
+
+        $validatedData = ['status_id' => $statusModel->id];
 
         $trip = $this->tripService->update($validatedData, $trip);
         
-        $trip->user->notify(new TripStatusChanged($trip, $statusName));
+        $trip->user->notify(new TripStatusChanged($trip, $statusModel->name));
 
         return $this->sendResponse(new TripResource($trip), $successMessage);
     }
 
     public function approve(int $id): JsonResponse
     {
-        return $this->updateTripStatus($id, TripStatus::APPROVED->name, 'Pedido de viagem aprovado com sucesso.');
+        return $this->updateTripStatus($id, TripStatus::APPROVED, 'Pedido de viagem aprovado com sucesso.');
     }
 
     public function cancel(int $id): JsonResponse
     {
-        return $this->updateTripStatus($id, TripStatus::CANCELED->name, 'Pedido de viagem cancelado com sucesso.');
+        return $this->updateTripStatus($id, TripStatus::CANCELED, 'Pedido de viagem cancelado com sucesso.');
     }
 }

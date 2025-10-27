@@ -13,4 +13,9 @@ class StatusRepository {
     {
         return $this->statusModel->all();
     }
+
+    public function getByName(string $name): ?Status
+    {
+        return $this->statusModel->where('name', $name)->first();
+    }
 }
