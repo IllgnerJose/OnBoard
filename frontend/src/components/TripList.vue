@@ -1,12 +1,18 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import axiosClient from "../axios.js";
+import ActionButtons from "./ActionButtons.vue";
+import { useUser } from '@/composables/useUser.js';
+import StatusBadge from "./ui/StatusBadge.vue";
 
+const { user } = useUser();
+
+const isAdmin = ref(user.value.data.is_admin);
 const trips = ref([]);
 const loading = ref(false);
 const errorMessage = ref('');
 
-async function fetchTrips() {
+async function loadTrips() {
     loading.value = true;
     errorMessage.value = '';
     try {
@@ -20,7 +26,11 @@ async function fetchTrips() {
     }
 }
 
-onMounted(fetchTrips);
+const reloadTrips = async () => {
+    loadTrips();
+};
+
+onMounted(loadTrips);
 </script>
 
 <template>
@@ -34,7 +44,7 @@ onMounted(fetchTrips);
                         <th class="px-6 py-4 text-left text-sm font-semibold">Data de Ida</th>
                         <th class="px-6 py-4 text-left text-sm font-semibold">Data de Volta</th>
                         <th class="px-6 py-4 text-left text-sm font-semibold">Status</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold">Ações</th>
+                        <th v-if="isAdmin" class="px-6 py-4 text-left text-sm font-semibold">Ações</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
@@ -50,20 +60,13 @@ onMounted(fetchTrips);
                         <td class="px-6 py-4 text-sm text-gray-700">{{ trip.departure_date }}</td>
                         <td class="px-6 py-4 text-sm text-gray-700">{{ trip.return_date }}</td>
                         <td class="px-6 py-4">
-                            <span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
-                                {{ trip.status.name }}
-                            </span>
+                            <StatusBadge :status="trip.status.name"/>
                         </td>
-                        <td class="px-6 py-4">
-                            <div class="flex space-x-2">
-                                <button class="p-1 text-blue-600 hover:bg-blue-50 rounded transition" title="Visualizar">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        </td>
+                        <ActionButtons 
+                            v-if="isAdmin"
+                            :trip-id="trip.id"
+                            @trip-updated="reloadTrips"
+                        />
                     </tr>
                 </tbody>
             </table>
