@@ -14,7 +14,7 @@ class NotificationController extends Controller
             ->take(20)
             ->get();
 
-        return response()->json($notifications);
+        return $this->sendResponse($notifications, 'Notificações do usuário lidas com sucesso.');
     }
 
     public function markAsRead(Request $request, $id)
@@ -25,20 +25,21 @@ class NotificationController extends Controller
         
         $notification->markAsRead();
 
-        return response()->json(['message' => 'Notificação marcada como lida']);
+        return $this->sendResponse($notification, 'Notificação marcada como lida.');
     }
 
     public function markAllAsRead(Request $request)
     {
-        $request->user()->unreadNotifications->markAsRead();
-        
-        return response()->json(['message' => 'Todas as notificações marcadas como lidas']);
+        $notifications = $request->user()->unreadNotifications;
+        $notifications->markAsRead();
+
+        return $this->sendResponse($notifications, 'Todas as notificações marcadas como lidas.');
     }
 
     public function unreadCount(Request $request)
     {
         $count = $request->user()->unreadNotifications()->count();
         
-        return response()->json(['count' => $count]);
+        return $this->sendResponse(['count' => $count], 'Contagem de notificações não lidas.');
     }
 }
