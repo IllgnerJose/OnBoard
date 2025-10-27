@@ -21,10 +21,10 @@ class LoginController extends Controller
         if (Auth::attempt($request->validated())) {
             $user = Auth::user();
             $success = $this->userService->createToken($user);
-            return $this->sendResponse($success, 'Usuario logado com successo.');
+            return $this->sendResponse($success, 'Bem Vindo, ' . Auth::user()->name);
 
         } else{ 
-            return $this->sendError('Login nao autorizado.', ['error'=>'Unauthorized'], 401);
+            return $this->sendError('Login não autorizado.', ['error'=>'Unauthorized'], 401);
 
         }
     }
