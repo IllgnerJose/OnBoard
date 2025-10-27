@@ -20,7 +20,7 @@ const props = defineProps({
 
 const emit = defineEmits(['tripsUpdated']);
 
-const isAdmin = computed(() => user.value?.data?.role === 'admin');
+const isAdmin = computed(() => user.value.data.is_admin);
 
 const reloadTrips = () => {
     emit('tripsUpdated');
