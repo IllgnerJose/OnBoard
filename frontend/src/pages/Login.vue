@@ -2,26 +2,26 @@
 import axiosClient from '@/axios';
 import router from '@/router';
 import { ref } from 'vue';
+import { useToast } from 'vue-toastification';
+
+const toast = useToast();
 
 const data = ref({
     email: '',
     password: '',
 })
 
-const errorMessage = ref('');
 
 function submit(){
-    errorMessage.value = '';
-    
     axiosClient.get('/sanctum/csrf-cookie').then(() => {
         axiosClient.post("api/login", data.value)
             .then(response => {
                 localStorage.setItem("token", response.data.data.token)
+                toast.success(response.data.message);
                 router.push({name: "Dashboard"});
             })
             .catch(error => {
-                console.log(error.response)
-                errorMessage.value = error.response.data.message;
+                toast.error(error.response.data.message);
             })
     });
 }
@@ -87,8 +87,6 @@ function submit(){
                                 >
                             </div>
                         </div>
-                        
-                        <p v-if="errorMessage" class="text-red-500 text-sm text-center mb-4">{{ errorMessage }}</p>
 
                         <!-- Lembrar-me e Esqueci senha -->
                         <div class="flex items-center justify-between mb-6">

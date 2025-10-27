@@ -4,7 +4,9 @@ import axiosClient from '@/axios';
 import router from '@/router';
 import { ref } from 'vue';
 import { useUser } from '@/composables/useUser.js';
+import { useToast } from 'vue-toastification';
 
+const toast = useToast();
 
 const { user } = useUser();
 
@@ -12,20 +14,21 @@ const data = ref({
     departure_date: '',
     return_date: '',
     destination_id : '',
-    user_id: user.value.id,
+    user_id: user.value.data.id,
 })
 
 const errorMessage = ref('');
 
-function submit(){
+function createTrip(){
     errorMessage.value = '';
     
     axiosClient.post("api/trips", data.value)
         .then(response => {
+            toast.success(response.data.message);
             router.push({name: "Dashboard"});
         })
         .catch(error => {
-            console.log(error.response)
+            toast.error(error.response.data.message);
             errorMessage.value = error.response.data.message;
         })
 }
@@ -74,7 +77,7 @@ function submit(){
                 </div>
 
                 <!-- Corpo do Formulário -->
-                <form @submit.prevent="submit" class="p-8">
+                <form @submit.prevent="createTrip" class="p-8">
                     <div class="space-y-6">
                         <!-- Campo Destino -->
                         <DestinationList v-model="data.destination_id"></DestinationList>
