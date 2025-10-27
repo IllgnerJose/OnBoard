@@ -20,7 +20,7 @@ it("approves the trip if the user is admin", function () {
     ];
 
     $response = $this->actingAs($user)
-        ->putJson("api/trips/" . $trip->id, $request);
+        ->putJson("api/trips/approve/" . $trip->id, $request);
 
     $response
         ->assertOk()
@@ -47,7 +47,7 @@ it("cancels the trip if the user is an admin", function () {
     ];
 
     $response = $this->actingAs($user)
-        ->putJson("api/trips/" . $trip->id, $request);
+        ->putJson("api/trips/cancel/" . $trip->id, $request);
 
     $trip->refresh();
 
@@ -76,12 +76,12 @@ it("can't cancel the trip if it is already approved", function () {
     ];
 
     $response = $this->actingAs($user)
-        ->putJson("api/trips/" . $trip->id, $request);
+        ->putJson("api/trips/cancel/" . $trip->id, $request);
 
     $trip->refresh();
 
     $response
-        ->assertUnauthorized()
+        ->assertStatus(409)
         ->assertJson([
             'success' => false,
         ]);
@@ -93,7 +93,7 @@ it("can't cancel the trip if it is already approved", function () {
 /**
  * Atualizar o status de um pedido de viagem: (nota: o usuário que fez o pedido não pode alterar o status do mesmo, somente um usuário administrador)
  */
-it("can't update the trip status if is a regular user", function () {
+it("can't approve the trip status if is a regular user", function () {
     $user = User::factory()->create();
 
     $trip = Trip::factory()->create();
@@ -104,12 +104,37 @@ it("can't update the trip status if is a regular user", function () {
     ];
 
     $response = $this->actingAs($user)
-        ->putJson("api/trips/" . $trip->id, $request);
+        ->putJson("api/trips/approve/" . $trip->id, $request);
 
     $trip->refresh();
 
     $response
-        ->assertUnauthorized()
+        ->assertStatus(403)
+        ->assertJson([
+            'success' => false,
+        ]);
+
+    expect($trip->status_id)
+        ->not()->toBe($request["status_id"]);
+});
+
+it("can't cancel the trip status if is a regular user", function () {
+    $user = User::factory()->create();
+
+    $trip = Trip::factory()->create();
+    $status = Status::factory()->canceled()->create();
+
+    $request = [
+        "status_id" => $status->id,
+    ];
+
+    $response = $this->actingAs($user)
+        ->putJson("api/trips/cancel/" . $trip->id, $request);
+
+    $trip->refresh();
+
+    $response
+        ->assertStatus(403)
         ->assertJson([
             'success' => false,
         ]);

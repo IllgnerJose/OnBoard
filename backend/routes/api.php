@@ -16,8 +16,8 @@ Route::post('login', LoginController::class)->name('login');
 Route::middleware('auth:sanctum')->group( function () {
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount']);
-    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
-    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead']);
+    Route::put('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+    Route::put('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead']);
 
     Route::get('user', function (Request $request) {
             return new UserResource($request->user());
@@ -28,10 +28,10 @@ Route::middleware('auth:sanctum')->group( function () {
             'destroy', 'create', 'edit', 'update'
         ]);
 
-    Route::put("approve/{trip}", [TripController::class, 'approve'])
+    Route::put("trips/approve/{trip}", [TripController::class, 'approve'])
         ->name('trip.approve');    
 
-    Route::put("cancel/{trip}", [TripController::class, 'cancel'])
+    Route::put("trips/cancel/{trip}", [TripController::class, 'cancel'])
         ->name('trip.cancel');   
 
     Route::resource('statuses', StatusController::class)
