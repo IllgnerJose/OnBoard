@@ -1,36 +1,30 @@
+<!-- components/TripList.vue -->
 <script setup>
-import { onMounted, ref } from "vue";
-import axiosClient from "../axios.js";
+import { computed } from "vue";
 import ActionButtons from "./ActionButtons.vue";
-import { useUser } from '@/composables/useUser.js';
 import StatusBadge from "./ui/StatusBadge.vue";
+import { useUser } from '@/composables/useUser.js';
 
 const { user } = useUser();
 
-const isAdmin = ref(user.value.data.is_admin);
-const trips = ref([]);
-const loading = ref(false);
-const errorMessage = ref('');
-
-async function loadTrips() {
-    loading.value = true;
-    errorMessage.value = '';
-    try {
-        const response = await axiosClient.get('/api/trips');
-        trips.value = response.data.data;
-    } catch (error) {
-        errorMessage.value = 'Não foi possível carregar os pedidos de viagem.';
-        console.error('Erro ao carregar destinos:', error);
-    } finally {
-        loading.value = false;
+const props = defineProps({
+    trips: {
+        type: Array,
+        default: () => []
+    },
+    loading: {
+        type: Boolean,
+        default: false
     }
-}
+});
 
-const reloadTrips = async () => {
-    loadTrips();
+const emit = defineEmits(['tripsUpdated']);
+
+const isAdmin = computed(() => user.value?.data?.role === 'admin');
+
+const reloadTrips = () => {
+    emit('tripsUpdated');
 };
-
-onMounted(loadTrips);
 </script>
 
 <template>
@@ -48,19 +42,38 @@ onMounted(loadTrips);
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
-                    <!-- Pedido 1 -->
+                    <!-- Loading -->
+                    <tr v-if="loading">
+                        <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+                            <div class="flex justify-center items-center">
+                                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                                <span class="ml-3">Carregando...</span>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Sem resultados -->
+                    <tr v-else-if="trips.length === 0">
+                        <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+                            Nenhuma viagem encontrada com os filtros aplicados.
+                        </td>
+                    </tr>
+
+                    <!-- Lista de viagens -->
                     <tr 
+                        v-else
+                        v-for="trip in trips" 
+                        :key="trip.id"
                         class="hover:bg-gray-50 transition"
-                         v-for="trip in trips" 
-                        :key="trip.id" 
-                        :value="trip.id"
                     >
                         <td class="px-6 py-4 text-sm text-gray-900 font-medium">#{{ trip.id }}</td>
-                        <td class="px-6 py-4 text-sm text-gray-700">{{ trip.destination.city }} - {{ trip.destination.state }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-700">
+                            {{ trip.destination.city }} - {{ trip.destination.state }}
+                        </td>
                         <td class="px-6 py-4 text-sm text-gray-700">{{ trip.departure_date }}</td>
                         <td class="px-6 py-4 text-sm text-gray-700">{{ trip.return_date }}</td>
                         <td class="px-6 py-4">
-                            <StatusBadge :status="trip.status.name"/>
+                            <StatusBadge :status="trip.status.name" />
                         </td>
                         <ActionButtons 
                             v-if="isAdmin"
