@@ -27,7 +27,7 @@ class TripController extends Controller
     {
         $validatedData = $request->validated();
         $status = Status::where('name', TripStatus::REQUESTED->name)->first();
-        $validatedData["status_id"] = $status ? $status->id : null;
+        $validatedData["status_id"] = $status->id;
 
         $trip = $this->tripService->store($validatedData);
         return $this->sendResponse(new TripResource($trip), 'Pedido de viagem criado com sucesso.');
@@ -57,10 +57,10 @@ class TripController extends Controller
         }
 
         $status = Status::where('name', $statusName)->first();
-        $validatedData = ['status_id' => $status?->id];
+        $validatedData = ['status_id' => $status->id];
 
         $trip = $this->tripService->update($validatedData, $trip);
-
+        
         $trip->user->notify(new TripStatusChanged($trip, $statusName));
 
         return $this->sendResponse(new TripResource($trip), $successMessage);
