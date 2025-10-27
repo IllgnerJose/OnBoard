@@ -7,19 +7,32 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\DestinationController;
+use App\Http\Resources\UserResource;
+use App\Http\Controllers\NotificationController;
 
 Route::post('register', RegisterController::class)->name('register');
 Route::post('login', LoginController::class)->name('login');
 
 Route::middleware('auth:sanctum')->group( function () {
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount']);
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead']);
+
     Route::get('user', function (Request $request) {
-            return $request->user();
+            return new UserResource($request->user());
         });
 
     Route::resource('trips', TripController::class)
         ->except([
-            'destroy', 'create', 'edit'
+            'destroy', 'create', 'edit', 'update'
         ]);
+
+    Route::put("approve/{trip}", [TripController::class, 'approve'])
+        ->name('trip.approve');    
+
+    Route::put("cancel/{trip}", [TripController::class, 'cancel'])
+        ->name('trip.cancel');   
 
     Route::resource('statuses', StatusController::class)
         ->only([

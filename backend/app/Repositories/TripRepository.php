@@ -3,6 +3,7 @@
 namespace App\Repositories;
 use App\Models\Trip;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class TripRepository {
     public function __construct(
@@ -12,6 +13,13 @@ class TripRepository {
     public function all(): Collection
     {
         return $this->tripModel->all();
+    }
+
+    public function getUserTrips(): Collection
+    {
+        return $this->tripModel
+            ->where('user_id', Auth::user()->id)
+            ->get();
     }
 
     public function create(array $validatedData): Trip 

@@ -2,8 +2,8 @@
 
 namespace App\Services;
 use App\Repositories\TripRepository;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Trip;
-use App\Models\Status;
 use Illuminate\Database\Eloquent\Collection;
 use App\Enums\TripStatus;
 use App\Exceptions\AlreadyApprovedTripException;
@@ -15,19 +15,17 @@ class TripService {
 
     public function index(): Collection
     {
-        $trips = $this->tripRepository->all();
+        if (Auth::user()->isAdmin()) {
+            $trips = $this->tripRepository->all();
+        } else {
+            $trips = $this->tripRepository->getUserTrips();
+        }
+        
         return $trips;
     }
 
     public function store(array $validatedData): Trip 
     {
-        $status = Status::where('name', TripStatus::REQUESTED->name)->first();
-        $validatedData["status_id"] = $status ? $status->id : null;
-
-        /**
-         * Lanca um expection aq dps
-         */
-        
         $trip = $this->tripRepository->create($validatedData);
         return $trip;
     }
