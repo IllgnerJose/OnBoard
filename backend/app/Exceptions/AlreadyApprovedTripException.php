@@ -12,6 +12,6 @@ class AlreadyApprovedTripException extends Exception
 
     public function render($request): JsonResponse
     {
-        return $this->sendError('Não é possível cancelar um pedido ja aprovado', [], 401);
+        return $this->sendError('Não é possível cancelar um pedido já aprovado', [], 409);
     }
 }
