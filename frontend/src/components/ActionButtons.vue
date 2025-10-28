@@ -19,10 +19,7 @@ const data = ref({
     status_id: '',
 })
 
-const errorMessage = ref('');
-
 function approveTrip(){
-    errorMessage.value = '';
     
     axiosClient.put(`api/trips/approve/${props.tripId}`, data.value)
         .then(response => {
@@ -31,12 +28,10 @@ function approveTrip(){
         })
         .catch(error => {
             toast.error(error.response.data.message);
-            errorMessage.value = error.response.data.message;
         })
 }    
 
 function cancelTrip(){
-    errorMessage.value = '';
     
     axiosClient.put(`api/trips/cancel/${props.tripId}`, data.value)
         .then(response => {
@@ -45,7 +40,6 @@ function cancelTrip(){
         })
         .catch(error => {
             toast.error(error.response.data.message);
-            errorMessage.value = error.response.data.message;
         })
 }   
 </script>

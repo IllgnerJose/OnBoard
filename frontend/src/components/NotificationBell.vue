@@ -3,7 +3,9 @@
 import { ref, onMounted, computed } from 'vue';
 import { Bell, Check } from 'lucide-vue-next';
 import axiosClient from '@/axios';
+import { useToast } from 'vue-toastification';
 
+const toast = useToast();
 const notifications = ref([]);
 const showDropdown = ref(false);
 const loading = ref(false);
@@ -16,9 +18,9 @@ async function loadNotifications() {
     loading.value = true;
     try {
         const response = await axiosClient.get('/api/notifications');
-        notifications.value = response.data;
+        notifications.value = response.data.data;
     } catch (error) {
-        console.error('Erro ao carregar notificações:', error);
+        toast.error(error.response.data.message);
     } finally {
         loading.value = false;
     }
@@ -26,26 +28,26 @@ async function loadNotifications() {
 
 async function markAsRead(notificationId) {
     try {
-        await axiosClient.post(`/api/notifications/${notificationId}/read`);
+        await axiosClient.put(`/api/notifications/${notificationId}/read`);
         const notification = notifications.value.find(n => n.id === notificationId);
         if (notification) {
             notification.read_at = new Date().toISOString();
         }
     } catch (error) {
-        console.error('Erro ao marcar como lida:', error);
+        toast.error(error.response.data.message);
     }
 }
 
 async function markAllAsRead() {
     try {
-        await axiosClient.post('/api/notifications/mark-all-read');
+        await axiosClient.put('/api/notifications/mark-all-read');
         notifications.value.forEach(n => {
             if (!n.read_at) {
                 n.read_at = new Date().toISOString();
             }
         });
     } catch (error) {
-        console.error('Erro ao marcar todas como lidas:', error);
+        toast.error(error.response.data.message);
     }
 }
 
