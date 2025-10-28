@@ -29,4 +29,14 @@ class StoreUserRequest extends BaseRequest
             'role_id' => "required|integer|exists:App\Models\Role,id",
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'O campo de nome é obrigatório.',
+            'email.required' => 'O campo de e-mail é obrigatório.',
+            'password.required' => 'O campo de senha não pode ficar em branco.',
+            'c_password.required' => 'O campo de confirme sua senha não pode ficar em branco.',
+        ];
+    }
 }

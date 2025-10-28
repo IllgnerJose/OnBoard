@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TripController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\DestinationController;
 use App\Http\Resources\UserResource;
@@ -12,6 +13,7 @@ use App\Http\Controllers\NotificationController;
 
 Route::post('register', RegisterController::class)->name('register');
 Route::post('login', LoginController::class)->name('login');
+Route::post('logout', LogoutController::class)->name('logout');
 
 Route::middleware('auth:sanctum')->group( function () {
     Route::get('/notifications', [NotificationController::class, 'index']);

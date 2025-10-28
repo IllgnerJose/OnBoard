@@ -1,18 +1,20 @@
+import { createRouter, createWebHistory } from 'vue-router'
 import Dashboard from '@/pages/Dashboard.vue';
 import Login from '@/pages/Login.vue';
+import Register from '@/pages/Register.vue';
 import NotFound from '@/pages/Create.vue';
 import Create from '@/pages/Create.vue';
-import { createRouter, createWebHistory } from 'vue-router'
 import useUserStore from "@/store/user.js";
 import DefaultLayout from '@/components/DefaultLayout.vue';
+import GuestLayout from '@/components/GuestLayout.vue';
 
 const routes = [
   {
     path: "/",
     component: DefaultLayout,
     children: [
-      {path: '/create', name: 'Create', component: Create},
-      {path: '/dashboard', name: 'Dashboard', component: Dashboard},
+      { path: '/create', name: 'Create', component: Create },
+      { path: '/dashboard', name: 'Dashboard', component: Dashboard },
     ],
     beforeEnter: async (to, from, next) => {
       try {
@@ -20,19 +22,18 @@ const routes = [
         await userStore.fetchUser();
         next();
       } catch (error) {
-        next(false); 
+        next(false);
       }
     },
   },
   {
-    path: "/login", 
-    name: "Login", 
-    component: Login,
-  },
-  {
-    path: "/:pathMatch(.*)*", 
-    name: "NotFound", 
-    component: NotFound,
+    path: "/",
+    component: GuestLayout,
+    children: [
+      { path: '/login', name: 'Login', component: Login },
+      { path: '/register', name: 'Register', component: Register },
+      { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
+    ],
   },
 ];
 

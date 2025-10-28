@@ -28,10 +28,10 @@ class LoginRequest extends FormRequest
     }
 
     public function messages(): array
-{
-    return [
-        'email.required' => 'O campo de e-mail é obrigatório.',
-        'password.required' => 'O campo de senha não pode ficar em branco.',
-    ];
-}
+    {
+        return [
+            'email.required' => 'O campo de e-mail é obrigatório.',
+            'password.required' => 'O campo de senha não pode ficar em branco.',
+        ];
+    }
 }
