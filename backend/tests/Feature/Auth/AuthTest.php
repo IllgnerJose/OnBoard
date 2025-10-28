@@ -6,9 +6,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
  
 pest()->use(RefreshDatabase::class);
 
-/**
- * **Autenticação de usuário**: Uma tela de login que consome a API de autenticação e armazena o token JWT para proteger as rotas da aplicação.
- */
 it('logs in an existing user successfully', function () {
     User::factory()->create([
         'email' => 'johndoe@example.com',

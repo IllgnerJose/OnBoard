@@ -7,9 +7,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
  
 pest()->use(RefreshDatabase::class);
 
-/**
- * Atualizar o status de um pedido de viagem: Possibilitar a atualização do status para "aprovado".
- */
 it("approves the trip if the user is admin", function () {
     $user = User::factory()->admin()->create();
     $trip = Trip::factory()->create();
@@ -58,9 +55,6 @@ it("don't approve the trip if the status doesn't exist", function () {
         ]);
 });
 
-/**
- * Atualizar o status de um pedido de viagem: Possibilitar a atualização do status para "cancelado".
- */
 it("cancels the trip if the user is an admin", function () {
     $user = User::factory()->admin()->create();
     $trip = Trip::factory()->create();
@@ -109,9 +103,6 @@ it("don't cancel the trip if the status doesn't exist", function () {
         ]);
 });
 
-/**
- * Cancelar pedido de viagem após aprovação: Implementar uma lógica de negócios que só permita o cancelamento do pedido caso ele ainda não tenha sido aprovado
- */
 it("can't cancel the trip if it is already approved", function () {
     $user = User::factory()->admin()->create();
     $status = Status::factory()->canceled()->create();
@@ -133,9 +124,6 @@ it("can't cancel the trip if it is already approved", function () {
         ->not()->toBe($status->id);
 });
 
-/**
- * Atualizar o status de um pedido de viagem: (nota: o usuário que fez o pedido não pode alterar o status do mesmo, somente um usuário administrador)
- */
 it("can't approve the trip status if it is a regular user", function () {
     $user = User::factory()->create();
     $trip = Trip::factory()->create();

@@ -6,9 +6,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
  
 pest()->use(RefreshDatabase::class);
 
-/**
- * Listar todos os pedidos de viagem: Retornar todos os pedidos de viagem cadastrados, com a opção de filtrar por status, período de tempo (ex: pedidos feitos ou com datas de viagem dentro de uma faixa de datas) e destino.
- */
 it('returns all trips', function () {
     $this->seed();
     $user = User::factory()->create();
@@ -25,9 +22,6 @@ it('returns all trips', function () {
         ]);
 });
 
-/**
- * Consultar um pedido de viagem: Retornar as informações detalhadas de um pedido de viagem com base no ID fornecido.
- */
 it('returns a single trip', function () {
     $this->seed();
     $user = User::factory()->create();
