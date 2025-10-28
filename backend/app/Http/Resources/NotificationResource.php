@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class StatusResource extends JsonResource
+class NotificationResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,10 +14,11 @@ class StatusResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        
         return [
             "id" => $this->id,
-            "name" => $this->name, 
+            "notifiable_id" => $this->notifiable_id, 
+            "read_at" => $this->read_at, 
+            "updated_at" => $this->updated_at,  
         ];
     }
 }
