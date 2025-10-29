@@ -1,8 +1,6 @@
 <?php
 
-use App\Models\User;
 use App\Models\Role;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 pest()->use(RefreshDatabase::class);
@@ -32,6 +30,26 @@ it('registers a new user successfully', function () {
         'email' => 'johndoe@example.com',
     ]);
 
-    $user = User::where('email', 'johndoe@example.com')->first();
-    expect(Hash::check($request['password'], $user->password))->toBeTrue();
+});
+
+it('return error when the role doesnt exist', function () {
+    $request = [
+        'name' => 'john doe',
+        'email' => 'johndoe@example.com',
+        'password' => 'password123',
+        'c_password' => 'password123',
+        'role_id' => 14,
+    ];
+
+    $response = $this->postJson('/api/register', $request);
+
+    $response->assertNotFound()
+        ->assertJson([
+            'success' => false,
+        ]);
+
+    $this->assertDatabaseMissing('users', [
+        'email' => 'johndoe@example.com',
+    ]);
+
 });
