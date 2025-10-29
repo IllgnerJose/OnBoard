@@ -13,14 +13,14 @@ use App\Http\Controllers\NotificationController;
 
 Route::post('register', RegisterController::class)->name('register');
 Route::post('login', LoginController::class)->name('login');
-Route::post('logout', LogoutController::class)->name('logout');
 
 Route::middleware('auth:sanctum')->group( function () {
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount']);
     Route::put('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
     Route::put('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead']);
-
+    Route::post('logout', LogoutController::class)->name('logout');
+    
     Route::get('/user', function (Request $request) {
         return new UserResource($request->user());
     });

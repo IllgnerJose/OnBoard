@@ -4,20 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class LogoutController extends Controller
 {
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(): JsonResponse
     {
-        Auth::logout();
- 
-        $request->session()->invalidate();
+        Auth::user()->currentAccessToken()->delete();
     
-        $request->session()->regenerateToken();
-    
-        return $this->sendResponse([], 'Logout realizado com sucesso.');
+        return response()->json(['message' => 'Logout realizado com sucesso.']);
     }
 }

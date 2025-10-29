@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\BaseRequest;
+use Illuminate\Foundation\Http\FormRequest;
 
-class StoreUserRequest extends BaseRequest
+class StoreUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,10 +23,9 @@ class StoreUserRequest extends BaseRequest
     {
         return [
             'name' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required',
             'c_password' => 'required|same:password',
-            'role_id' => "required|integer|exists:App\Models\Role,id",
         ];
     }
 
@@ -34,9 +33,11 @@ class StoreUserRequest extends BaseRequest
     {
         return [
             'name.required' => 'O campo de nome é obrigatório.',
+            'name.unique' => 'Este e-mail já esta em uso.',
             'email.required' => 'O campo de e-mail é obrigatório.',
             'password.required' => 'O campo de senha não pode ficar em branco.',
             'c_password.required' => 'O campo de confirme sua senha não pode ficar em branco.',
+            'c_password.same' => 'O campo de confirme sua senha tem que ser igual a sua senha atual.',
         ];
     }
 }
