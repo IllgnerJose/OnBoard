@@ -31,10 +31,8 @@ function createTrip(){
 
 <template>
     <div class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen p-4">
-        <!-- Formulário Principal -->
         <div class="max-w-4xl mx-auto">
             <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
-                <!-- Header do Formulário -->
                 <div class="bg-gradient-to-r from-blue-600 to-indigo-600 p-6">
                     <div class="flex items-center space-x-3">
                         <div class="p-3 bg-white bg-opacity-20 rounded-lg">
@@ -49,15 +47,11 @@ function createTrip(){
                     </div>
                 </div>
 
-                <!-- Corpo do Formulário -->
                 <form @submit.prevent="createTrip" class="p-8">
                     <div class="space-y-6">
-                        <!-- Campo Destino -->
                         <DestinationList v-model="data.destination_id"></DestinationList>
 
-                        <!-- Datas em Grid -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Data de Ida -->
                             <div>
                                 <label class="block text-gray-700 text-sm font-semibold mb-2" for="dataIda">
                                     Data de Ida *
@@ -78,7 +72,6 @@ function createTrip(){
                                 </div>
                             </div>
 
-                            <!-- Data de Volta -->
                             <div>
                                 <label class="block text-gray-700 text-sm font-semibold mb-2" for="dataVolta">
                                     Data de Volta *
@@ -100,7 +93,6 @@ function createTrip(){
                             </div>
                         </div>
 
-                        <!-- Card de Resumo -->
                         <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4">
                             <div class="flex items-start space-x-3">
                                 <svg class="w-5 h-5 text-blue-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -118,7 +110,6 @@ function createTrip(){
                         </div>
                     </div>
 
-                    <!-- Botões de Ação -->
                     <div class="flex flex-col sm:flex-row gap-4 mt-8">
                         <button 
                             type="button"
@@ -137,7 +128,6 @@ function createTrip(){
                 </form>
             </div>
 
-            <!-- Rodapé com informações -->
             <div class="mt-6 text-center text-sm text-gray-600">
                 <p>Precisa de ajuda? Entre em contato com o suporte</p>
             </div>

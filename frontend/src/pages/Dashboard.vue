@@ -4,6 +4,7 @@ import { ref, computed, onMounted } from 'vue';
 import axiosClient from '@/axios';
 import router from '@/router';
 import { useToast } from 'vue-toastification';
+import { Clipboard, Clock, CircleCheck, CircleX, Plus, Search, X } from 'lucide-vue-next';
 
 const toast = useToast();
 const trips = ref([]);
@@ -164,9 +165,7 @@ onMounted(() => {
 
 <template>
     <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
-        <!-- Main Content -->
         <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <!-- Cards de Estatísticas -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <div class="flex items-center justify-between">
@@ -175,9 +174,7 @@ onMounted(() => {
                             <p class="text-3xl font-bold text-gray-800">{{ stats.total }}</p>
                         </div>
                         <div class="p-3 bg-blue-100 rounded-lg">
-                            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                            </svg>
+                            <Clipboard class="w-8 h-8 text-blue-600" />
                         </div>
                     </div>
                 </div>
@@ -189,9 +186,7 @@ onMounted(() => {
                             <p class="text-3xl font-bold text-yellow-600">{{ stats.pending }}</p>
                         </div>
                         <div class="p-3 bg-yellow-100 rounded-lg">
-                            <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
+                            <Clock class="w-8 h-8 text-yellow-600"/>
                         </div>
                     </div>
                 </div>
@@ -203,9 +198,7 @@ onMounted(() => {
                             <p class="text-3xl font-bold text-green-600">{{ stats.approved }}</p>
                         </div>
                         <div class="p-3 bg-green-100 rounded-lg">
-                            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
+                            <CircleCheck class="w-8 h-8 text-green-600"/>
                         </div>
                     </div>
                 </div>
@@ -217,9 +210,7 @@ onMounted(() => {
                             <p class="text-3xl font-bold text-red-600">{{ stats.canceled }}</p>
                         </div>
                         <div class="p-3 bg-red-100 rounded-lg">
-                            <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
+                            <CircleX class="w-8 h-8 text-red-600"/>
                         </div>
                     </div>
                 </div>
@@ -231,11 +222,9 @@ onMounted(() => {
                     <h2 class="text-xl font-bold text-gray-800">Pedidos de Viagem</h2>
                     <button 
                         @click="router.push('/create')"
-                        class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold px-6 py-2 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition duration-300 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
+                        class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold px-6 py-2 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition duration-300 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2 cursor-pointer"
                     >
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                        </svg>
+                        <Plus class="w-5 h-5"/>
                         <span>Novo Pedido</span>
                     </button>
                 </div>
@@ -258,11 +247,9 @@ onMounted(() => {
                         >
                         <button 
                             @click="searchById"
-                            class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium flex items-center gap-2"
+                            class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium flex items-center gap-2 cursor-pointer"
                         >
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                            </svg>
+                            <Search class="w-5 h-5"/>
                             Buscar
                         </button>
                     </div>
@@ -328,11 +315,9 @@ onMounted(() => {
                 <div class="flex flex-wrap gap-3 mt-6">
                     <button 
                         @click="clearFilters"
-                        class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium flex items-center gap-2"
+                        class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium flex items-center gap-2 cursor-pointer"
                     >
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                        </svg>
+                        <X class="w-4 h-4"/>
                         Limpar Tudo
                     </button>
                     <div class="flex-1"></div>

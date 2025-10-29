@@ -11,7 +11,7 @@ const data = ref({
     password: '',
 })
 
-function submit(){
+function login(){
     axiosClient.get('/sanctum/csrf-cookie').then(() => {
         axiosClient.post("api/login", data.value)
             .then(response => {
@@ -28,7 +28,7 @@ function submit(){
 </script>
 
 <template>
-    <form @submit.prevent="submit">
+    <form @submit.prevent="login">
         <div class="mb-6">
             <label class="block text-gray-700 text-sm font-semibold mb-2" for="email">
                 E-mail
@@ -69,7 +69,6 @@ function submit(){
             </div>
         </div>
 
-        <!-- Botão Entrar -->
         <button 
             type="submit"
             class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-3 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"

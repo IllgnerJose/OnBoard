@@ -13,7 +13,7 @@ const data = ref({
     c_password: '',
 })
 
-function submit(){
+function register(){
     axiosClient.get('/sanctum/csrf-cookie').then(() => {
         axiosClient.post("api/register", data.value)
             .then(response => {
@@ -29,7 +29,7 @@ function submit(){
 </script>
 
 <template>
-    <form @submit.prevent="submit">
+    <form @submit.prevent="register">
         <div class="mb-6">
             <label class="block text-gray-700 text-sm font-semibold mb-2" for="email">
                 Nome
