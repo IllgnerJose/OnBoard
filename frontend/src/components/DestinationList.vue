@@ -1,7 +1,9 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import axiosClient from "../axios.js";
+import { useToast } from 'vue-toastification';
 
+const toast = useToast();
 const destinations = ref([]);
 const loading = ref(false);
 const errorMessage = ref('');
@@ -30,7 +32,7 @@ async function fetchDestinations() {
         destinations.value = response.data.data;
     } catch (error) {
         errorMessage.value = 'Não foi possível carregar os destinos.';
-        console.error('Erro ao carregar destinos:', error);
+        toast.error('Erro ao carregar destinos:', error);
     } finally {
         loading.value = false;
     }

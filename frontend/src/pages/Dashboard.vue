@@ -3,15 +3,14 @@ import TripList from '@/components/TripList.vue';
 import { ref, computed, onMounted } from 'vue';
 import axiosClient from '@/axios';
 import router from '@/router';
+import { useToast } from 'vue-toastification';
 
-// Dados
+const toast = useToast();
 const trips = ref([]);
 const loading = ref(false);
 
-// Busca por ID (separada dos filtros)
 const searchId = ref('');
 
-// Filtros
 const filters = ref({
     status: '',
     destination: '',
@@ -26,7 +25,7 @@ async function loadTrips() {
         const response = await axiosClient.get('/api/trips');
         trips.value = response.data.data;
     } catch (error) {
-        console.error('Erro ao carregar viagens:', error);
+        toast.error('Erro ao carregar viagens:', error);
         trips.value = [];
     } finally {
         loading.value = false;
@@ -50,7 +49,7 @@ async function searchById() {
             ? response.data.data 
             : [response.data.data];
     } catch (error) {
-        console.error('Erro ao buscar viagem por ID:', error);
+        toast.error('Erro ao buscar viagem por ID:', error);
         trips.value = [];
     } finally {
         loading.value = false;

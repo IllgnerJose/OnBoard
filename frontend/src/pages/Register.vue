@@ -30,7 +30,6 @@ function submit(){
 
 <template>
     <form @submit.prevent="submit">
-        <!-- Campo Email -->
         <div class="mb-6">
             <label class="block text-gray-700 text-sm font-semibold mb-2" for="email">
                 Nome
@@ -51,7 +50,6 @@ function submit(){
             </div>
         </div>
 
-        <!-- Campo Email -->
         <div class="mb-6">
             <label class="block text-gray-700 text-sm font-semibold mb-2" for="email">
                 E-mail
@@ -72,7 +70,6 @@ function submit(){
             </div>
         </div>
 
-        <!-- Campo Senha -->
         <div class="mb-6">
             <label class="block text-gray-700 text-sm font-semibold mb-2" for="password">
                 Senha
@@ -93,7 +90,6 @@ function submit(){
             </div>
         </div>
 
-        <!-- Campo Senha -->
         <div class="mb-6">
             <label class="block text-gray-700 text-sm font-semibold mb-2" for="password">
                 Confirme sua senha
@@ -114,7 +110,6 @@ function submit(){
             </div>
         </div>
 
-        <!-- Botão Entrar -->
         <button 
             type="submit"
             class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-3 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
@@ -132,7 +127,7 @@ function submit(){
     <div class="text-center">
         <p class="text-gray-600 text-sm">
             Já tem uma conta? 
-            <button @click="router.push('/create')" class="text-blue-600 hover:text-blue-800 font-semibold cursor-pointer">
+            <button @click="router.push('/login')" class="text-blue-600 hover:text-blue-800 font-semibold cursor-pointer">
                 Logue-se
             </button>
         </p>

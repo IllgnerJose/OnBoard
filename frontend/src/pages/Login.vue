@@ -11,7 +11,6 @@ const data = ref({
     password: '',
 })
 
-
 function submit(){
     axiosClient.get('/sanctum/csrf-cookie').then(() => {
         axiosClient.post("api/login", data.value)
@@ -21,7 +20,7 @@ function submit(){
                 router.push({name: "Dashboard"});
             })
             .catch(error => {
-                console.log(error.response.data);
+                console.log(error.response);
                 toast.error(error.response.data.message);
             })
     });
@@ -30,7 +29,6 @@ function submit(){
 
 <template>
     <form @submit.prevent="submit">
-        <!-- Campo Email -->
         <div class="mb-6">
             <label class="block text-gray-700 text-sm font-semibold mb-2" for="email">
                 E-mail
@@ -51,7 +49,6 @@ function submit(){
             </div>
         </div>
 
-        <!-- Campo Senha -->
         <div class="mb-6">
             <label class="block text-gray-700 text-sm font-semibold mb-2" for="password">
                 Senha

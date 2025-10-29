@@ -8,7 +8,6 @@ use App\Http\Requests\StoreTripRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
 use App\Http\Resources\TripResource;
-use App\Models\Status;
 use App\Enums\TripStatus;
 use App\Notifications\TripStatusChanged;
 
