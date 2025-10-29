@@ -2,6 +2,7 @@
 import { onMounted, ref } from "vue";
 import axiosClient from "../axios.js";
 import { useToast } from 'vue-toastification';
+import { MapPin, ChevronDown } from 'lucide-vue-next';
 
 const toast = useToast();
 const destinations = ref([]);
@@ -42,7 +43,7 @@ onMounted(fetchDestinations);
 </script>
 
 <template>
-    <div>
+    <div >
         <label class="block text-gray-700 text-sm font-semibold mb-2" for="destino">
             Destino *
         </label>
@@ -60,21 +61,18 @@ onMounted(fetchDestinations);
         <!-- Select de Destinos -->
         <div v-else class="relative">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                </svg>
+                <MapPin class="w-5 h-5 text-gray-400"/>
             </div>
             
             <!-- Ícone de seta do select -->
             <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                </svg>
+                <ChevronDown class="w-5 h-5 text-gray-400"/>
             </div>
             
             <select 
-                class="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition appearance-none bg-white cursor-pointer"
+                class="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg 
+                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition 
+                appearance-none bg-white cursor-pointer z-0"
                 id="destino"
                 :value="modelValue"
                 @input="updateValue"

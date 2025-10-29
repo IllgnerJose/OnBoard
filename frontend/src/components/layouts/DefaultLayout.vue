@@ -68,7 +68,7 @@ function logout(){
             </div>
         </div>
     </header>
-    <RouterView/>
+    <slot></slot>
 </template>
 
 <style scoped>

@@ -5,39 +5,37 @@ import Register from '@/pages/Register.vue';
 import NotFound from '@/pages/NotFound.vue';
 import Create from '@/pages/Create.vue';
 import useUserStore from "@/store/user.js";
-import DefaultLayout from '@/components/DefaultLayout.vue';
-import GuestLayout from '@/components/GuestLayout.vue';
 
 const routes = [
   {
-    path: "/app",
-    component: DefaultLayout,
-    children: [
-      { path: '/create', name: 'Create', component: Create },
-      { path: '/dashboard', name: 'Dashboard', component: Dashboard },
-    ],
-    beforeEnter: async (to, from, next) => {
-      try {
-        const userStore = useUserStore();
-        await userStore.fetchUser();
-        next();
-      } catch (error) {
-        next(false);
-      }
-    },
+    path: '/login',
+    name: 'Login',
+    component: Login,
+    meta: { title: 'Cadastro', requiresAuth: false },
   },
   {
-    path: "/",
-    component: GuestLayout,
-    children: [
-      { path: 'login', name: 'Login', component: Login },
-      { path: 'register', name: 'Register', component: Register },
-    ],
+    path: '/register',
+    name: 'Register',
+    component: Register,
+    meta: { title: 'Registro', requiresAuth: false },
   },
-  { 
-    path: '/:pathMatch(.*)*', 
-    name: 'NotFound', 
-    component: NotFound 
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: NotFound,
+    meta: { title: 'Not Found', requiresAuth: false  },
+  },
+  {
+    path: '/create',
+    name: 'Create',
+    component: Create,
+    meta: { title: 'Criar Pedido', requiresAuth: true },
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: Dashboard,
+    meta: { title: 'Dashboard', requiresAuth: true },
   },
 ];
 
@@ -45,5 +43,24 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes
 })
+
+router.beforeEach((to, from, next) => {
+  document.title = to.meta.title + ' - OnBoard' || 'OnBoard';
+  next();
+});
+
+router.beforeEach(async (to, from, next) => {
+  if (to.meta.requiresAuth) {
+    try {
+      const userStore = useUserStore();
+      await userStore.fetchUser();
+      next();
+    } catch (error) {
+      next('/login');
+    }
+  } else {
+    next();
+  }
+});
 
 export default router

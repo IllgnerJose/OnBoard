@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import './assets/styles/main.css' 
+import './assets/styles/main.css'
 import App from './App.vue'
 import router from './router'
 import { createPinia } from 'pinia'
@@ -10,7 +10,7 @@ const pinia = createPinia()
 const app = createApp(App)
 
 app.use(Toast, {
-    position: "top-right",
+    position: "bottom-right",
     timeout: 3000,
     closeOnClick: true,
     pauseOnFocusLoss: true,

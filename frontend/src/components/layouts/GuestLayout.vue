@@ -16,7 +16,7 @@
                 </div>
 
                 <div class="p-8">
-                    <RouterView/>
+                    <slot></slot>
                 </div>
             </div>
         </div>

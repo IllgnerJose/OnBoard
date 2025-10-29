@@ -34,6 +34,7 @@ const reloadTrips = () => {
                 <thead class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
                     <tr>
                         <th class="px-6 py-4 text-left text-sm font-semibold">ID</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold">Solicitante</th>
                         <th class="px-6 py-4 text-left text-sm font-semibold">Destino</th>
                         <th class="px-6 py-4 text-left text-sm font-semibold">Data de Ida</th>
                         <th class="px-6 py-4 text-left text-sm font-semibold">Data de Volta</th>
@@ -67,6 +68,7 @@ const reloadTrips = () => {
                         class="hover:bg-gray-50 transition"
                     >
                         <td class="px-6 py-4 text-sm text-gray-900 font-medium">#{{ trip.id }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-700">{{ trip.created_by.name }}</td>
                         <td class="px-6 py-4 text-sm text-gray-700">
                             {{ trip.destination.city }} - {{ trip.destination.state }}
                         </td>

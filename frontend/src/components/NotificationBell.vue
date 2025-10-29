@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { Bell, Check } from 'lucide-vue-next';
 import axiosClient from '@/axios';
 import { useToast } from 'vue-toastification';
@@ -71,17 +71,17 @@ function handleClickOutside(event) {
     }
 }
 
+let interval = null;
+
 onMounted(() => {
     loadNotifications();
-    
-    const interval = setInterval(loadNotifications, 30000);
-    
+    interval = setInterval(loadNotifications, 30000);
     document.addEventListener('click', handleClickOutside);
-    
-    return () => {
-        clearInterval(interval);
-        document.removeEventListener('click', handleClickOutside);
-    };
+});
+
+onBeforeUnmount(() => {
+    clearInterval(interval);
+    document.removeEventListener('click', handleClickOutside);
 });
 </script>
 
