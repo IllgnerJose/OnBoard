@@ -29,7 +29,6 @@ it("approves the trip if the user is admin", function () {
 
 it("don't approve the trip if it doesn't exist", function () {
     $user = User::factory()->admin()->create();
-    $status = Status::factory()->approved()->create();
 
     $response = $this->actingAs($user)
         ->putJson("api/trips/approve/" . 2);
@@ -50,6 +49,20 @@ it("don't approve the trip if the status doesn't exist", function () {
         
     $response
         ->assertNotFound()
+        ->assertJson([
+            'success' => false,
+        ]);
+});
+
+it("don't approve the trip if it is already approved", function () {
+    $user = User::factory()->admin()->create();
+    $trip = Trip::factory()->approved()->create();
+
+    $response = $this->actingAs($user)
+        ->putJson("api/trips/approve/" . $trip->id);
+
+    $response
+        ->assertConflict()
         ->assertJson([
             'success' => false,
         ]);
@@ -103,7 +116,21 @@ it("don't cancel the trip if the status doesn't exist", function () {
         ]);
 });
 
-it("can't cancel the trip if it is already approved", function () {
+it("don't cancel the trip if it is already canceled", function () {
+    $user = User::factory()->admin()->create();
+    $trip = Trip::factory()->canceled()->create();
+
+    $response = $this->actingAs($user)
+        ->putJson("api/trips/cancel/" . $trip->id);
+
+    $response
+        ->assertConflict()
+        ->assertJson([
+            'success' => false,
+        ]);
+});
+
+it("don't cancel the trip if it is already approved", function () {
     $user = User::factory()->admin()->create();
     $status = Status::factory()->canceled()->create();
     $canceledStatus = Status::factory()->canceled()->create();
@@ -124,7 +151,7 @@ it("can't cancel the trip if it is already approved", function () {
         ->not()->toBe($status->id);
 });
 
-it("can't approve the trip status if it is a regular user", function () {
+it("dont't approve the trip status if it is a regular user", function () {
     $user = User::factory()->create();
     $trip = Trip::factory()->create();
     $status = Status::factory()->canceled()->create();
@@ -144,7 +171,7 @@ it("can't approve the trip status if it is a regular user", function () {
         ->not()->toBe($status->id);
 });
 
-it("can't cancel the trip status if it is a regular user", function () {
+it("dont't cancel the trip status if it is a regular user", function () {
     $user = User::factory()->create();
 
     $trip = Trip::factory()->create();
