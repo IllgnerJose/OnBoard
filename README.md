@@ -69,7 +69,7 @@ APP_URL=http://localhost:8080
 DB_CONNECTION=mysql
 DB_HOST=db
 DB_PORT=3306
-DB_DATABASE=laravelcd 
+DB_DATABASE=laravel
 DB_USERNAME=username
 DB_PASSWORD=userpass
 ```
