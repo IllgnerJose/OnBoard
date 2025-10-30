@@ -6,6 +6,7 @@ use App\Services\UserService;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class LoginController extends Controller
 {
@@ -24,7 +25,7 @@ class LoginController extends Controller
             return $this->sendResponse($success, 'Bem Vindo, ' . Auth::user()->name);
 
         } else{ 
-            return $this->sendError('Login não autorizado.', ['error'=>'Unauthorized'], 401);
+            return $this->sendError('Login não autorizado.', ['error'=>'Unauthorized'], Response::HTTP_UNAUTHORIZED);
 
         }
     }

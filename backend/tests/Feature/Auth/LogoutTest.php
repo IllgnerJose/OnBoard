@@ -13,7 +13,7 @@ test('user can logout successfully', function () {
 
     $response = $this->postJson('/api/logout');
 
-    $response->assertStatus(200)
+    $response->assertOk()
         ->assertJson([
             'message' => 'Logout realizado com sucesso.'
         ]);

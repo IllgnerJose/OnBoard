@@ -18,12 +18,12 @@ class TripStatusChanged extends Notification
         $this->status = $status;
     }
 
-    public function via($notifiable)
+    public function via()
     {
         return ['database'];
     }
 
-    public function toDatabase($notifiable)
+    public function toDatabase()
     {
         $statusText = $this->status === 'APPROVED' ? 'aprovado' : 'cancelado';
         
