@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Resources\TripResource;
 use App\Enums\TripStatus;
 use App\Notifications\TripStatusChanged;
+use Symfony\Component\HttpFoundation\Response;
 
 class TripController extends Controller
 {
@@ -59,8 +60,13 @@ class TripController extends Controller
         }
 
         if (Auth::user()->cannot('updateStatus', $trip)) {
-            return $this->sendError('O usuário não tem permissão para atualizar o status do pedido.', [], 403);
+            return $this->sendError('O usuário não tem permissão para atualizar o status do pedido.', [], Response::HTTP_FORBIDDEN);
         }
+
+        if ($trip->status->name == $status->name) {
+            $statusText = $status->name === 'APPROVED' ? 'aprovado' : 'cancelado';
+            return $this->sendError("Esse pedido já foi $statusText!", [], Response::HTTP_CONFLICT);
+        }   
 
         $statusModel = $this->statusService->getByName($status->name);
 
