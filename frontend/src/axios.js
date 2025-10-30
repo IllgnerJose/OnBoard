@@ -7,6 +7,7 @@ const axiosClient = axios.create({
     withXSRFToken: true
 })
 
+//Manipula o Bearer Token em cada requisição
 axiosClient.interceptors.request.use(config => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -15,6 +16,7 @@ axiosClient.interceptors.request.use(config => {
     return config;
 });
 
+//Redireciona o usuario nao logado para a tela de login
 axiosClient.interceptors.response.use((response) => {
     return response;
 }, error => {

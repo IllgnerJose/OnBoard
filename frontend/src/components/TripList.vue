@@ -1,4 +1,3 @@
-<!-- components/TripList.vue -->
 <script setup>
 import { computed } from "vue";
 import ActionButtons from "./ActionButtons.vue";

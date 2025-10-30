@@ -6,156 +6,65 @@ import router from '@/router';
 import { useToast } from 'vue-toastification';
 import { Clipboard, Clock, CircleCheck, CircleX, Plus, Search, X, Hash } from 'lucide-vue-next';
 import DefaultLayout from '@/components/layouts/DefaultLayout.vue';
+import { searchTripFilters } from '@/composables/searchTripFilters';
 
 const toast = useToast();
 const trips = ref([]);
 const loading = ref(false);
 
-const searchId = ref('');
-
-const filters = ref({
-    status: '',
-    destination: '',
-    startDate: '',
-    endDate: ''
-});
-
-// Carregar todas as viagens
 async function loadTrips() {
     loading.value = true;
     try {
         const response = await axiosClient.get('/api/trips');
         trips.value = response.data.data;
     } catch (error) {
-        toast.error('Erro ao carregar viagens:', error);
+        toast.error('Erro ao carregar pedido de viagenm:', error);
         trips.value = [];
     } finally {
         loading.value = false;
     }
 }
 
-// Buscar viagem específica por ID no backend
 async function searchById() {
     if (!searchId.value.trim()) {
-        loadTrips(); // Se não tem ID, carrega todas as viagens
+        loadTrips(); 
         return;
     }
     
     loading.value = true;
     try {
-        // Substitua pela sua rota do backend que busca por ID
         const response = await axiosClient.get(`/api/trips/${searchId.value}`);
         
-        // Se retornar um objeto, coloca em array; se retornar array, usa direto
         trips.value = Array.isArray(response.data.data) 
             ? response.data.data 
             : [response.data.data];
     } catch (error) {
-        toast.error('Erro ao buscar viagem por ID:', error);
+        toast.error('Erro ao buscar pedido de viagem por ID:', error);
         trips.value = [];
     } finally {
         loading.value = false;
     }
 }
 
-// Filtrar viagens (apenas filtros locais, não inclui ID)
-const filteredTrips = computed(() => {
-    let result = [...trips.value];
+const { filters, filteredTrips, stats, clearFilters: clearFilterValues } = searchTripFilters(trips);
 
-    // Filtro por Status
-    if (filters.value.status) {
-        result = result.filter(trip => 
-            trip.status.name.toLowerCase() === filters.value.status.toLowerCase()
-        );
-    }
+const searchId = ref('');
 
-    // Filtro por Destino (busca em cidade e estado)
-    if (filters.value.destination) {
-        const searchTerm = filters.value.destination.toLowerCase();
-        result = result.filter(trip => {
-            const city = trip.destination.city.toLowerCase();
-            const state = trip.destination.state.toLowerCase();
-            return city.includes(searchTerm) || state.includes(searchTerm);
-        });
-    }
-
-    // Filtro por Data
-    if (filters.value.startDate || filters.value.endDate) {
-        const parseDate = (str) => {
-            if (!str) return null;
-            const [day, month, year] = str.split('/');
-            return new Date(Number(year), Number(month) - 1, Number(day));
-        };
-
-        const formatDateToBR = (str) => {
-            if (!str) return '';
-            const [year, month, day] = str.split('-');
-            return `${day}/${month}/${year}`;
-        };
-
-        const filterStart = parseDate(formatDateToBR(filters.value.startDate));
-        const filterEnd = parseDate(formatDateToBR(filters.value.endDate));
-
-        result = result.filter(trip => {
-            const departureDate = parseDate(trip.departure_date);
-            const returnDate = parseDate(trip.return_date);
-
-            if (!departureDate || !returnDate) return false;
-
-            // Se apenas data inicial definida
-            if (filterStart && !filterEnd) {
-                return departureDate >= filterStart || returnDate >= filterStart;
-            }
-
-            // Se apenas data final definida
-            if (!filterStart && filterEnd) {
-                return departureDate <= filterEnd || returnDate <= filterEnd;
-            }
-
-            // Se ambas definidas - viagem acontece dentro do período
-            if (filterStart && filterEnd) {
-                return (
-                    (departureDate >= filterStart && departureDate <= filterEnd) ||
-                    (returnDate >= filterStart && returnDate <= filterEnd) ||
-                    (departureDate <= filterStart && returnDate >= filterEnd)
-                );
-            }
-
-            return true;
-        });
-    }
-
-    return result;
-});
-
-// Estatísticas computadas baseadas nas viagens filtradas
-const stats = computed(() => {
-    const total = filteredTrips.value.length;
-    const pending = filteredTrips.value.filter(t => t.status.name === 'REQUESTED').length;
-    const approved = filteredTrips.value.filter(t => t.status.name === 'APPROVED').length;
-    const canceled = filteredTrips.value.filter(t => t.status.name === 'CANCELED').length;
-
-    return { total, pending, approved, canceled };
-});
-
-// Limpar todos os filtros e busca
-function clearFilters() {
-    filters.value = {
-        status: '',
-        destination: '',
-        startDate: '',
-        endDate: ''
-    };
-    searchId.value = '';
-    loadTrips(); // Recarrega todas as viagens
+async function handleSearchById() {
+    await searchById(searchId.value);
 }
 
-// Recarregar viagens (callback do TripList)
+function clearFilters() {
+    clearFilterValues();
+    searchId.value = '';
+    loadTrips();
+}
+
 function handleTripsUpdated() {
     if (searchId.value.trim()) {
-        searchById(); // Se estava buscando por ID, refaz a busca
+        handleSearchById();
     } else {
-        loadTrips(); // Senão, recarrega todas
+        loadTrips();
     }
 }
 
@@ -166,8 +75,8 @@ onMounted(() => {
 
 <template>
     <DefaultLayout>
-        <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
-            <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                     <div class="bg-white rounded-lg shadow-md p-6">
                         <div class="flex items-center justify-between">
@@ -333,8 +242,8 @@ onMounted(() => {
                     :loading="loading"
                     @trips-updated="handleTripsUpdated"
                 />
-            </main>
-        </body>
+            </div>
+        </main>
     </DefaultLayout>
 </template>
 
