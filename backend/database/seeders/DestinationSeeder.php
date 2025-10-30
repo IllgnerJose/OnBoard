@@ -13,10 +13,23 @@ class DestinationSeeder extends Seeder
      */
     public function run(): void
     {
-        Destination::create([
-            "city" => "Cabo Frio",
-            "state" => "Rio de Janeiro", 
-            "country" => "Brasil",
-        ]);
+        $destinations = [
+            ["city" => "Cabo Frio", "state" => "Rio de Janeiro", "country" => "Brasil"],
+            ["city" => "Rio de Janeiro", "state" => "Rio de Janeiro", "country" => "Brasil"],
+            ["city" => "Búzios", "state" => "Rio de Janeiro", "country" => "Brasil"],
+            ["city" => "Paraty", "state" => "Rio de Janeiro", "country" => "Brasil"],
+            ["city" => "Angra dos Reis", "state" => "Rio de Janeiro", "country" => "Brasil"],
+            
+            ["city" => "Belo Horizonte", "state" => "Minas Gerais", "country" => "Brasil"],
+            ["city" => "Ouro Preto", "state" => "Minas Gerais", "country" => "Brasil"],
+            ["city" => "Tiradentes", "state" => "Minas Gerais", "country" => "Brasil"],
+            ["city" => "Uberlândia", "state" => "Minas Gerais", "country" => "Brasil"],
+            ["city" => "Juiz de Fora", "state" => "Minas Gerais", "country" => "Brasil"],
+            
+        ];
+
+        foreach ($destinations as $destination) {
+            Destination::create($destination);
+        }
     }
 }
